@@ -1,6 +1,7 @@
 #include "datalistmodel.h"
 #include "charactersetbuilder.h"
 #include "passwordgenerator.h"
+#include <QMessageBox>
 
 DataListModel::DataListModel(QObject *parent) : QAbstractItemModel(parent) {
   m_data = QList<QString>();
@@ -36,6 +37,17 @@ void DataListModel::fillData(QBitArray bools, int length, int loops) {
                            .setUppercase(bools[2])
                            .setOthers(bools[3])
                            .avoidAmbiguous(bools[4]);
+
+  // warning message box appears in case chars are empty
+  if (chars.getCharacters().isEmpty()) {
+    QMessageBox::warning(NULL, "Not enough password settings",
+                         "Please, choose at least one of these settings:"
+                         "\n1. Allow digits"
+                         "\n2. Allow lowercase letters"
+                         "\n3. Allow uppercase letters"
+                         "\n4. Allow other characters\n");
+    return;
+  }
 
   // clear in case it is not empty
   if (!m_data.empty())
