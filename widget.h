@@ -2,7 +2,6 @@
 #define WIDGET_H
 
 #include "datalistmodel.h"
-#include <QBitArray>
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -18,7 +17,7 @@ class Widget : public QWidget {
   Q_OBJECT
   // |---------------- WIDGET OBJECTS ----------------|
   // Spin box allows user set amount of generated passwords
-  QSpinBox *spinBoxGenerationAmount;
+  QSpinBox *spinBoxGenerationNumber;
   QLabel *labelGenAmount;
 
   // Spin box allows user set password length

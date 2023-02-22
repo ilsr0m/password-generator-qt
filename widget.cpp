@@ -1,4 +1,5 @@
 #include "widget.h"
+#include "charactersetbuilder.h"
 
 void Widget::initSpinBox(QSpinBox *&spinBox, int minimum, int maximum) {
   if (!spinBoxWrapper)
@@ -42,9 +43,9 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
   // Inizializing widgets and put them into layouts
   // inizializing labels for spin boxes
   initSpinLabel(labelGenAmount, "Number of passwords:");
-  initSpinBox(spinBoxGenerationAmount, 1, 1000);
+  initSpinBox(spinBoxGenerationNumber, 1, 50000);
   initSpinLabel(labelPassLen, "Password length:");
-  initSpinBox(spinBoxPasswordLength, 8, 250);
+  initSpinBox(spinBoxPasswordLength, 8, 200);
   spinBoxWrapper->setAlignment(Qt::AlignTop);
 
   // inizializing check boxes
@@ -91,16 +92,18 @@ Widget::Widget(QWidget *parent) : QWidget(parent) {
 Widget::~Widget() {}
 
 void Widget::insertValuesInListView() {
+  // initialize char set, building its settings
+  CharacterSet permissibleCharacters =
+      CharacterSetBuilder()
+          .setDigits(checkDigits->isChecked())
+          .setLowercase(checkLowercaseLetter->isChecked())
+          .setUppercase(checkUppercaseLetter->isChecked())
+          .setOthers(checkOtherChars->isChecked())
+          .avoidAmbiguous(checkAvoidAmbiguous->isChecked());
 
-  // put boolean values in bit array to send it to the next slot
-  QBitArray bools(5); // true/false
-  bools[0] = checkDigits->isChecked();
-  bools[1] = checkLowercaseLetter->isChecked();
-  bools[2] = checkUppercaseLetter->isChecked();
-  bools[3] = checkOtherChars->isChecked();
-  bools[4] = checkAvoidAmbiguous->isChecked();
-
-  // fill list view with generated passwords
-  model->fillData(bools, spinBoxPasswordLength->value(),
-                  spinBoxGenerationAmount->value());
+  if (!permissibleCharacters.getCharacters().isEmpty()) {
+    // fill list view with generated passwords
+    model->fillModel(permissibleCharacters, spinBoxPasswordLength->value(),
+                     spinBoxGenerationNumber->value());
+  }
 }

@@ -22,7 +22,7 @@ QList<QString> PasswordGenerator::generate(CharacterSet permissibleSet,
       for (int i = 0; i < passwordlLength; ++i)
         password += chars[ranGen->bounded(0, charLength)];
       // add generated password to list
-      passwordList << password;
+      passwordList.append(password);
       --loops;
     }
     return passwordList;

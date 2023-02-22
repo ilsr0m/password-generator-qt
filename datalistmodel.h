@@ -9,6 +9,7 @@
 class DataListModel : public QAbstractItemModel {
   Q_OBJECT
   QList<QString> m_data;
+  QWidget *m_parent;
 
 public:
   DataListModel(QObject *);
@@ -21,7 +22,7 @@ public:
   virtual QModelIndex parent(const QModelIndex &index) const;
 
   // public slots:
-  void fillData(QBitArray, int, int);
+  void fillModel(CharacterSet, int, int);
 };
 
 #endif // DATALISTMODEL_H
